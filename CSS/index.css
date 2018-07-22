@@ -1,0 +1,57 @@
+body {
+    background-color: lightblue;
+}
+
+fieldset {
+    font-size: 1.5em;
+}
+
+/*-------------------------- entete --------------------------*/
+
+#ephec {
+    width : 85%;
+    height: 10%;
+}
+
+#header {
+    display: flex;
+    /*justify-content: space-around;*/
+}
+
+#champ {
+    display:flex;
+    flex-direction: column;
+    width: 15%;
+}
+
+#champ input {
+    background-color: darkblue;
+    width: 90%;
+    color: white;
+    margin: 7%;
+    height: 10%;
+    size: 20px;
+}
+
+#champ p {
+    width: 90%;
+    color: white;
+    margin: 7%;
+    height: 10%;
+    font-size: 100%;
+}
+
+
+/*----------------------  main ------------------------------------------*/
+
+
+main {
+    font-size: 100%;
+}
+
+
+/*----------------------------- footer ----------------------------------------*/
+
+footer {
+    text-align: right;
+}
