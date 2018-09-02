@@ -7,19 +7,20 @@
     <link rel="stylesheet" type="text/css" href="CSS/index.css"/>
     <script src="/jq/jquery-3.3.1.min.js"></script>
     <script type="text/javascript" src="JS/index.js"></script>
+
 </head>
 <body>
     <header>
         <div id="header">
             <img id="ephec" src="IMG/ephec.jpg" alt="image ephec">
             <div id="champ">
-                <p>Commence par t'inscrire ou te connecter</p>
                 <input id="inscription" type="button" value="Inscritption"><br>
                 <input id="connexion" type="button" value="Connexion">
             </div>
         </div>
     </header>
     <main>
+        <?php echo $message ?>
         <!--<video id="video" src="IMG/Monfilm.mp4" controls width="500" height="300"></video>-->
         <!--<?php require_once "INC/template.login.inc.php"; ?>-->
     </main>

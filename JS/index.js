@@ -26,7 +26,7 @@ function inscription(json){
 
 function menu(json){
     $('main').html(json);
-    $('main').append('<h1>Bienvenue</h1>');
+    //$('main').append('<h1>Bienvenue</h1>');
     $('a').click(function(event){
         event.preventDefault();
         appelAjax(this);
@@ -90,10 +90,13 @@ function gereRetour(retour){
                 $.ajax('INC/template.menu.inc.php').done(menu);
                 break;
             case 'erreur' :
-                $('main').html(retour[action]);
+                alert(retour[action]);
+                //$('main').html(retour[action]);
                 break;
             case 'correction' :
-                $(input[type=submit]).append('resultat');
+                $.ajax('INC/template.menu.inc.php').done(menu);
+                alert('tu as obtenu ' + retour[action] + ' sur 2');
+                //$(input[type=submit]).append('resultat');
                 break;
             default :
                 $('main').html(retour);

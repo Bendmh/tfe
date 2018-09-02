@@ -12,6 +12,7 @@ function gereRequete($rq=""){
             if($retour != []){
                 return '{"erreur" : "Ce compte existe déjà" }';
             }else {
+                $_SESSION['user'] = $_POST;
                 return '{"inscription" : ' . JSON_encode($iDB->call('ajouterPersonne')) .'}';
             }
             break;
@@ -19,10 +20,10 @@ function gereRequete($rq=""){
             //return print_r($_POST, 1);
             $iDB = new Db();
             $retour = $iDB->verification('connexion');
-            //return print_r($retour, 1);
             if($retour[0]["PersMdp"] != $_POST["password"]){
                 return '{"erreur" : "Mot de passe incorrect" }';
             }else {
+                $_SESSION['user'] = $_POST;
                 return '{"inscription" : ""}';
             }
             break;
@@ -46,6 +47,7 @@ function gereRequete($rq=""){
                 //print_r($result, 1);
             break;
         case 'deconnexion' :
+            unset($_SESSION['user']);
             return '{"deconnexion" : "Au revoir"}';
             break;
         default :
