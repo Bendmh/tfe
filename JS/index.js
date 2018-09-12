@@ -1,5 +1,6 @@
 var bonneReponses = [];
 var resultat = 0;
+var nombre = 0;
 
 $(document).ready(function(){
 
@@ -26,7 +27,6 @@ function inscription(json){
 
 function menu(json){
     $('main').html(json);
-    //$('main').append('<h1>Bienvenue</h1>');
     $('a').click(function(event){
         event.preventDefault();
         appelAjax(this);
@@ -95,7 +95,7 @@ function gereRetour(retour){
                 break;
             case 'correction' :
                 $.ajax('INC/template.menu.inc.php').done(menu);
-                alert('tu as obtenu ' + retour[action] + ' sur 2');
+                alert('tu as obtenu ' + retour[action] + ' sur ' + nombre);
                 //$(input[type=submit]).append('resultat');
                 break;
             default :
@@ -112,6 +112,7 @@ function gereRetour(retour){
 */
 function creationQCM(json){
     var retour = '<br><fieldset><legend>Activité 1</legend><form method="post" name="formQuest" id="formQuest" action="correction.html">';
+    nombre = json.length;
     for(var i=0; i<json.length; i++){
         retour += '<h2>' + json[i]["question"] + ' ?</h2>';
         reponses = melangerReponses(json[i]);
@@ -120,7 +121,7 @@ function creationQCM(json){
         }
     }
     retour += '<br><input type="submit" value="Envoyé">'
-    retour += '<h3>Ton résultat : 0/2 </h3>';
+    //retour += '<h3>Ton résultat : 0/2 </h3>';
     return retour;
 }
 

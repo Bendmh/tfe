@@ -12,7 +12,7 @@
 <body>
     <header>
         <div id="header">
-            <img id="ephec" src="IMG/ephec.jpg" alt="image ephec">
+            <img id="ephec" src="IMG/ephec_im.png" alt="image ephec">
             <div id="champ">
                 <input id="inscription" type="button" value="Inscritption"><br>
                 <input id="connexion" type="button" value="Connexion">

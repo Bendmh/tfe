@@ -3,7 +3,6 @@
 require_once 'INC/db.inc.php';
 
 function gereRequete($rq=""){
-    global $toSend;
     switch($rq){
         case 'inscription' :
             $iDB = new Db();
@@ -27,28 +26,33 @@ function gereRequete($rq=""){
                 return '{"inscription" : ""}';
             }
             break;
-        case 'questions' :
+        case 'activite1' :
+        case 'activite2' :
+            $_SESSION['activiteId'] = substr($rq, -1, 1);
             $iDB = new Db();
-            return '{"questions" : ' . JSON_encode($iDB->call('questions')) .'}';
+            $iDB->call('PersAct');
+            //return '{"questions" : ' . JSON_encode($iDB->call('PersAct')) .'}';
+            return '{"questions" : ' . JSON_encode($iDB->call('questions', $_SESSION['activiteId'])) .'}';
         break;
         case 'correction' :
             //return print_r($_POST, 1);
             $size = count($_POST);
             $result = 0;
             $iDB = new Db();
-            $retour = $iDB->verification('correction');
+            $retour = $iDB->verification('correction' , $_SESSION['activiteId']);
             //return print_r($retour, 1);
             for($i = 0; $i < $size-1; $i++){
                 if($retour[$i]['bonneReponse'] == $_POST['reponses'.$i]){
                     $result = $result+1;
                 }
             }
-            return '{"correction" : '. $result . '}';
+            $iDB->call('ajouterNote', $result);
+            return '{"correction" : "'. $result . '"}';
                 //print_r($result, 1);
             break;
         case 'deconnexion' :
             unset($_SESSION['user']);
-            return '{"deconnexion" : "Au revoir"}';
+            return '{"deconnexion" : "<p>Au revoir</p>"}';
             break;
         default :
             return '{"default":"Requête inconnue : ' . $rq . '"}';

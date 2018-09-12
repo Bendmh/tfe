@@ -20,7 +20,7 @@ class Db {
         return 'PDOException : ' . ($this->pdoException ? $this->pdoException->getMessage() : 'aucune !');
     }
 
-    public function verification($choix = 'inscription'){
+    public function verification($choix = 'inscription', $num = ''){
         switch($choix){
             case 'connexion' :
             case 'inscription' :
@@ -38,29 +38,16 @@ class Db {
                 return $row;
                 break;
             case 'correction' :
-                $appel = 'select bonneReponse from Questions';
+                $appel = 'select bonneReponse from Questions natural join ActQuest where ActId = ' . $num;
                 $sth = $this->iPdo->prepare($appel);
                 $sth->execute();
                 return $sth->fetchAll(PDO::FETCH_ASSOC);
                 break;
 
-            /*case 'connexion' :
-                $appel = 'select * from Personnes where PersNom = ? and PersPrenom = ?';
-                $sth = $this->iPdo->prepare($appel);
-
-                $sth->bindParam(1, $nom);
-                $sth->bindParam(2, $prenom);
-
-                $nom = $_POST['nom'];
-                $prenom = $_POST['prenom'];
-
-                $sth->execute();
-                return $sth->fetchAll(PDO::FETCH_ASSOC);
-                break;*/
         }
     }
 
-    public function call($nom = '')
+    public function call($nom = '', $num = '')
     {
         switch ($nom){
             case 'ajouterPersonne' :
@@ -78,34 +65,41 @@ class Db {
                 $nom = $_POST['nom'];
                 $prenom = $_POST['prenom'];
                 $Mdp = $_POST['password'];
-                $statut = 'élèves';
+                $statut = $_POST['statut'];
 
                 $sth->execute();
+
+                break;
 
             case 'questions' :
-                $appel = 'select * from Questions';
+                $appel = 'SELECT * FROM test.ActQuest natural join Questions where ActId = '. $num;
+                //$appel = 'select * from Questions where activite = '. $num .'.;
                 $sth = $this->iPdo->prepare($appel);
                 $sth->execute();
                 return $sth->fetchAll(PDO::FETCH_ASSOC);
-        }
-        /*$tab = [];
-        switch ($nom) {
-            case 'whoIs' : $tab[] = '?';
-            case 'userProfil' :
-            case 'mc_group' :
-            case 'mc_coursesGroup' : $tab[] = '?';
-            case 'mc_allGroups' :
-            try {
-                $appel = 'call 1718he201458.' . $nom . '(' . implode(',', $tab) . ')';
+                break;
+
+            case 'PersAct' :
+                $appel = 'select PersId from test.Personnes where PersPrenom = "' . $_SESSION['user']['prenom'] .'" and PersNom = "'. $_SESSION['user']['nom'] . '"';
                 $sth = $this->iPdo->prepare($appel);
-                $sth->execute($param);
-                return $sth->fetchAll(PDO::FETCH_ASSOC);
-            } catch (PDOException $e) {
-                $this->pdoException = $e;
-                return ['__ERR__' => $this->pdoException];
-            }
-            break;
-                default : return ['__ERR__' => 'call impossible à ' . $nom];
-        }*/
+                $sth->execute();
+                $result = $sth->fetch(PDO::FETCH_NUM);
+
+                $appel = 'insert into PersAct (PersId, ActId, cote) value (?,?,NULL)';
+                $sth = $this->iPdo->prepare($appel);
+                $sth->bindParam(1, $idPers);
+                $sth->bindParam(2, $idAct);
+
+                $idPers = $result[0];
+                $idAct = $_SESSION['activiteId'];
+
+                $sth->execute();
+                break;
+
+            case 'ajouterNote' :
+                $appel = 'UPDATE PersAct SET cote = '. $num .' WHERE PersId = 18';
+                $sth = $this->iPdo->prepare($appel);
+                $sth->execute();
+        }
     }
 }
