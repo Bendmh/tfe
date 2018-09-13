@@ -80,24 +80,18 @@ class Db {
                 break;
 
             case 'PersAct' :
-                $appel = 'select PersId from test.Personnes where PersPrenom = "' . $_SESSION['user']['prenom'] .'" and PersNom = "'. $_SESSION['user']['nom'] . '"';
-                $sth = $this->iPdo->prepare($appel);
-                $sth->execute();
-                $result = $sth->fetch(PDO::FETCH_NUM);
 
-                $appel = 'insert into PersAct (PersId, ActId, cote) value (?,?,NULL)';
+                $appel = 'INSERT INTO PersAct (PersId, ActId, cote) VALUES ((select PersId from test.Personnes where PersPrenom = "'. $_SESSION['user']['prenom'] .'" and PersNom = "'. $_SESSION['user']['nom'] .'"), ?, NULL) ON DUPLICATE KEY UPDATE cote = NULL';
                 $sth = $this->iPdo->prepare($appel);
-                $sth->bindParam(1, $idPers);
-                $sth->bindParam(2, $idAct);
+                $sth->bindParam(1, $idAct);
 
-                $idPers = $result[0];
                 $idAct = $_SESSION['activiteId'];
 
                 $sth->execute();
                 break;
 
             case 'ajouterNote' :
-                $appel = 'UPDATE PersAct SET cote = '. $num .' WHERE PersId = 18';
+                $appel = 'UPDATE PersAct SET cote = '. $num .' WHERE ActId= '. $_SESSION['activiteId'] .' and PersId = (select PersId from test.Personnes where PersPrenom = "'. $_SESSION['user']['prenom'] .'" and PersNom = "'. $_SESSION['user']['nom'] .'")';
                 $sth = $this->iPdo->prepare($appel);
                 $sth->execute();
         }
