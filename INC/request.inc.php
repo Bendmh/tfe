@@ -7,7 +7,6 @@ function gereRequete($rq=""){
         case 'inscription' :
             $iDB = new Db();
             $retour = $iDB->verification();
-            //return print_r($retour[0], 1);
             if($retour != []){
                 return '{"erreur" : "Ce compte existe déjà" }';
             }else {
@@ -16,14 +15,20 @@ function gereRequete($rq=""){
             }
             break;
         case 'connexion' :
-            //return print_r($_POST, 1);
             $iDB = new Db();
             $retour = $iDB->verification('connexion');
+            //return JSON_encode($retour);
             if($retour[0]["PersMdp"] != $_POST["password"]){
                 return '{"erreur" : "Mot de passe incorrect" }';
             }else {
-                $_SESSION['user'] = $_POST;
-                return '{"inscription" : ""}';
+                $_SESSION['user'] = $retour;
+                //return JSON_encode($_SESSION);
+                if($_SESSION['user'][0]['PersStatut'] == "élèves"){
+                    return '{"inscription" : "élève"}';
+                }else {
+                    return '{"inscription" : "prof"}';
+                }
+                //return '{"inscription" : ""}';
             }
             break;
         case 'activite1' :
@@ -31,8 +36,8 @@ function gereRequete($rq=""){
             $_SESSION['activiteId'] = substr($rq, -1, 1);
             $iDB = new Db();
             $iDB->call('PersAct');
-            //return '{"questions" : ' . JSON_encode($iDB->call('PersAct')) .'}';
-            return '{"questions" : ' . JSON_encode($iDB->call('questions', $_SESSION['activiteId'])) .'}';
+            $_SESSION['question'] = JSON_encode($iDB->call('questions'));
+            return '{"questions" : ' . JSON_encode($iDB->call('questions')) .'}';
         break;
         case 'correction' :
             //return print_r($_POST, 1);
@@ -42,13 +47,13 @@ function gereRequete($rq=""){
             $retour = $iDB->verification('correction' , $_SESSION['activiteId']);
             //return print_r($retour, 1);
             for($i = 0; $i < $size-1; $i++){
+                //if($_SESSION['question'][$i]['bonneReponse'] == $_POST['reponses'.$i]){
                 if($retour[$i]['bonneReponse'] == $_POST['reponses'.$i]){
                     $result = $result+1;
                 }
             }
             $iDB->call('ajouterNote', $result);
             return '{"correction" : "'. $result . '"}';
-                //print_r($result, 1);
             break;
         case 'deconnexion' :
             unset($_SESSION['user']);

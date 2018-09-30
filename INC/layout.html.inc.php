@@ -8,6 +8,15 @@
     <script src="/jq/jquery-3.3.1.min.js"></script>
     <script type="text/javascript" src="JS/index.js"></script>
 
+    <style>
+        #ephec {
+            width: <?php echo $taille ?>;
+        }
+
+        #champ {
+            display:  <?php echo $boutons ?>;
+        }
+    </style>
 </head>
 <body>
     <header>
@@ -20,9 +29,14 @@
         </div>
     </header>
     <main>
-        <?php echo $message ?>
-        <!--<video id="video" src="IMG/Monfilm.mp4" controls width="500" height="300"></video>-->
-        <!--<?php require_once "INC/template.login.inc.php"; ?>-->
+        <div id="menu">
+            <!--<ul>
+                <li><a href="activite1.html">Activité 1</a></li>
+                <li><a href="activite2.html">Activité 2</a></li>
+                <li><a href="deconnexion.html">Déconnexion</a></li>
+            </ul>-->
+        </div>
+        <div id="login"><?php echo $message ?></div>
     </main>
     <footer>
         <p>Benoit de Mahieu - Année 2018-2019</p>

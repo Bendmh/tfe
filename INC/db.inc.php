@@ -72,7 +72,7 @@ class Db {
                 break;
 
             case 'questions' :
-                $appel = 'SELECT * FROM test.ActQuest natural join Questions where ActId = '. $num;
+                $appel = 'SELECT * FROM test.ActQuest natural join Questions where ActId = '. $_SESSION['activiteId'];
                 //$appel = 'select * from Questions where activite = '. $num .'.;
                 $sth = $this->iPdo->prepare($appel);
                 $sth->execute();
@@ -81,7 +81,7 @@ class Db {
 
             case 'PersAct' :
 
-                $appel = 'INSERT INTO PersAct (PersId, ActId, cote) VALUES ((select PersId from test.Personnes where PersPrenom = "'. $_SESSION['user']['prenom'] .'" and PersNom = "'. $_SESSION['user']['nom'] .'"), ?, NULL) ON DUPLICATE KEY UPDATE cote = NULL';
+                $appel = 'INSERT INTO PersAct (PersId, ActId, cote) VALUES ((select PersId from test.Personnes where PersPrenom = "'. $_SESSION['user'][0]['PersPrenom'] .'" and PersNom = "'. $_SESSION['user'][0]['PersNom'] .'"), ?, NULL) ON DUPLICATE KEY UPDATE cote = NULL';
                 $sth = $this->iPdo->prepare($appel);
                 $sth->bindParam(1, $idAct);
 
@@ -91,7 +91,7 @@ class Db {
                 break;
 
             case 'ajouterNote' :
-                $appel = 'UPDATE PersAct SET cote = '. $num .' WHERE ActId= '. $_SESSION['activiteId'] .' and PersId = (select PersId from test.Personnes where PersPrenom = "'. $_SESSION['user']['prenom'] .'" and PersNom = "'. $_SESSION['user']['nom'] .'")';
+                $appel = 'UPDATE PersAct SET cote = '. $num .' WHERE ActId= '. $_SESSION['activiteId'] .' and PersId = (select PersId from test.Personnes where PersPrenom = "'. $_SESSION['user'][0]['PersPrenom'] .'" and PersNom = "'. $_SESSION['user'][0]['PersNom'] .'")';
                 $sth = $this->iPdo->prepare($appel);
                 $sth->execute();
         }

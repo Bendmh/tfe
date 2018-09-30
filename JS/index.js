@@ -4,6 +4,11 @@ var nombre = 0;
 
 $(document).ready(function(){
 
+    $('a').click(function(){
+        event.preventDefault();
+        appelAjax(this);
+    });
+
     $('#inscription').click(function(){
         $.ajax('INC/template.login.inc.php').done(inscription);
     });
@@ -14,11 +19,11 @@ $(document).ready(function(){
 });
 
 function inscription(json){
-    $('main').html(json);
+    $('#login').html(json);
     $('#formNom').submit(function(event){
         event.preventDefault();
         if($('#password').val() != $('#password2').val()){
-            console.log('Les deux mots de passe sont différents');
+            alert('Les deux mots de passe sont différents');
         }else {
             appelAjax(this);
         }
@@ -26,7 +31,7 @@ function inscription(json){
 }
 
 function menu(json){
-    $('main').html(json);
+    $('#menu').html(json);
     $('a').click(function(event){
         event.preventDefault();
         appelAjax(this);
@@ -36,11 +41,12 @@ function menu(json){
 }
 
 function connexion(json){
-    $('main').html(json);
+    $('#login').html(json);
     $('fieldset legend').html('Connexion');
     $("label[for='password2']").remove();
     $('#password2').remove();
     $('#statut').remove();
+    $('#classes').remove();
     $("input[type='submit']").val('Connexion');
     $('#formNom').submit(function(event){
         event.preventDefault();
@@ -73,13 +79,23 @@ function gereRetour(retour){
     for(var action in retour){
         switch(action){
             case 'deconnexion' :
-                $('main').html(retour[action]);
+                $('#login').html(retour[action]);
                 $('#champ').show();
+                $('#menu').hide();
+                $('#login').show();
                 $('#ephec').css('width', '85%');
+                $('#inscription').click(function(){
+                    $.ajax('INC/template.login.inc.php').done(inscription);
+                });
+
+                $('#connexion').click(function(){
+                    $.ajax('INC/template.login.inc.php').done(connexion);
+                });
                 break
             case 'questions' :
-                QCM = creationQCM(retour[action]);
-                $('main').html(QCM);
+                QCM = creationQCM(retour[action], retour["questions"][0]["ActId"]);
+                $('#login').show();
+                $('#login').html(QCM);
                 $('#formQuest').submit(function(event){
                     event.preventDefault();
                     //verification();
@@ -87,16 +103,21 @@ function gereRetour(retour){
                 });
                 break;
             case 'inscription' :
-                $.ajax('INC/template.menu.inc.php').done(menu);
+                if(retour[action] == 'élève'){
+                    $.ajax('INC/template.menu.inc.php').done(menu);
+                }else{
+                    $.ajax('INC/template.menu2.inc.php').done(menu);
+                }
+                $('#login').hide();
+                $('#menu').show();
                 break;
             case 'erreur' :
                 alert(retour[action]);
-                //$('main').html(retour[action]);
                 break;
             case 'correction' :
+                $('#login').hide();
                 $.ajax('INC/template.menu.inc.php').done(menu);
                 alert('tu as obtenu ' + retour[action] + ' sur ' + nombre);
-                //$(input[type=submit]).append('resultat');
                 break;
             default :
                 $('main').html(retour);
@@ -104,14 +125,8 @@ function gereRetour(retour){
     }
 }
 
-/*function verification() {
-    if(($('input[name=reponses0]:checked')).val() == bonneReponses[0]){
-        resultat = resultat++;
-    }
-}
-*/
-function creationQCM(json){
-    var retour = '<br><fieldset><legend>Activité 1</legend><form method="post" name="formQuest" id="formQuest" action="correction.html">';
+function creationQCM(json, actId){
+    var retour = '<br><fieldset><legend>Activité ' + actId + ' </legend><form method="post" name="formQuest" id="formQuest" action="correction.html">';
     nombre = json.length;
     for(var i=0; i<json.length; i++){
         retour += '<h2>' + json[i]["question"] + ' ?</h2>';
