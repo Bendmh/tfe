@@ -1,14 +1,14 @@
 <fieldset>
     <legend>Inscription</legend>
     <form method="post" name="formNom" id="formNom" action="inscription.html">
-        <label for="nom">Nom :</label>
+        <label for="nom">Nom :</label><br>
         <input type="text" name="nom" id="nom"><br>
-        <label for="prenom">Prénom :</label>
+        <label for="prenom">Prénom :</label><br>
         <input type="text" name="prenom" id="prenom">
         <br>
-        <label for="password">Mot de passe :</label>
+        <label for="password">Mot de passe :</label><br>
         <input type="password" name="password" id="password"><br>
-        <label for="password2">Retaper le mot de passe :</label>
+        <label for="password2">Retaper le mot de passe :</label><br>
         <input type="password" name="password2" id="password2"><br>
         <select id="statut" name="statut">
             <option value="Eleves">Eleves</option>

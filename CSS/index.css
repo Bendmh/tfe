@@ -1,5 +1,7 @@
 body {
     background-color: lightblue;
+    overflow-X: hidden;
+    box-sizing: border-box;
 }
 
 fieldset {
@@ -9,7 +11,7 @@ fieldset {
 /*-------------------------- entete --------------------------*/
 
 #ephec {
-    width : 85%;
+    width : 84%;
     height: 10%;
 }
 
@@ -21,7 +23,7 @@ fieldset {
 #champ {
     display:flex;
     flex-direction: column;
-    width: 15%;
+    width: 14%;
 }
 
 #champ input {
@@ -40,11 +42,55 @@ fieldset {
 
 main {
     font-size: 100%;
+    width: 100%;
+    margin-left: auto;
+    margin-right: auto;
 }
-
+table, th, td {
+    padding : 1.5em;
+    border: 1px solid black;
+    border-collapse: collapse;
+}
 
 /*----------------------------- footer ----------------------------------------*/
 
 footer {
     text-align: right;
+}
+
+
+/*responsive design*/
+
+@media screen and (max-width: 650px){
+
+    body {
+        background-color: lightblue;
+    }
+
+    header #ephec {
+        width : 100%;
+        height: auto;
+    }
+
+    #header {
+        display: block;
+    }
+
+    #champ {
+        width: 90%;
+    }
+
+    #champ input {
+        background-color: darkblue;
+        width: 90%;
+        color: white;
+        height: 3.5em;
+        size: 5px;
+    }
+
+    table, th, td {
+        padding : 0.4em;
+        border: 1px solid black;
+        border-collapse: collapse;
+    }
 }

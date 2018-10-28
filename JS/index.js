@@ -19,6 +19,7 @@ $(document).ready(function(){
 });
 
 function inscription(json){
+    $('#login').show();
     $('#login').html(json);
     $('#formNom').submit(function(event){
         event.preventDefault();
@@ -41,6 +42,7 @@ function menu(json){
 }
 
 function connexion(json){
+    $('#login').show();
     $('#login').html(json);
     $('fieldset legend').html('Connexion');
     $("label[for='password2']").remove();
@@ -79,10 +81,12 @@ function gereRetour(retour){
     for(var action in retour){
         switch(action){
             case 'deconnexion' :
-                $('#login').html(retour[action]);
+                $('#message').html(retour[action]);
                 $('#champ').show();
                 $('#menu').hide();
-                $('#login').show();
+                $('#login').hide();
+                //$('#login').show();
+                $('#classes').hide();
                 $('#ephec').css('width', '85%');
                 $('#inscription').click(function(){
                     $.ajax('INC/template.login.inc.php').done(inscription);
@@ -94,8 +98,8 @@ function gereRetour(retour){
                 break
             case 'questions' :
                 QCM = creationQCM(retour[action], retour["questions"][0]["ActId"]);
-                $('#login').show();
                 $('#login').html(QCM);
+                $('#login').show();
                 $('#formQuest').submit(function(event){
                     event.preventDefault();
                     //verification();
@@ -103,10 +107,18 @@ function gereRetour(retour){
                 });
                 break;
             case 'inscription' :
-                if(retour[action] == 'élève'){
+                $('#message').html('<h1> Bienvenue ' + retour[action]["PersPrenom"] + '</h1>');
+                if(retour[action]["PersStatut"] == 'Eleves'){
                     $.ajax('INC/template.menu.inc.php').done(menu);
                 }else{
-                    $.ajax('INC/template.menu2.inc.php').done(menu);
+                    menuProf = creeMenu(retour["inscription"]["classe"]);
+                    $('#menu').html(menuProf);
+                    $('a').click(function(event){
+                        event.preventDefault();
+                        appelAjax(this);
+                    });
+                    $('#champ').hide();
+                    $('#ephec').css('width', '100%');
                 }
                 $('#login').hide();
                 $('#menu').show();
@@ -119,26 +131,59 @@ function gereRetour(retour){
                 $.ajax('INC/template.menu.inc.php').done(menu);
                 alert('tu as obtenu ' + retour[action] + ' sur ' + nombre);
                 break;
+            case 'classes' :
+                tableau = creeTableau(retour[action]);
+                $('#classes').html(tableau);
+                $('#classes').show();
+                break;
             default :
                 $('main').html(retour);
         }
     }
 }
 
+
+function creeMenu(json){
+    var tab = json.split(",");
+    var retour = '<ul><li>Classes : </li><ul>';
+    for (var i=0; i < tab.length; i++){
+        retour += '<li><a href="' + tab[i] + '.html">' + tab[i] + '</a></li>';
+    }
+    retour += '</ul><li><a href="deconnexion.html">Déconnexion</a></li></ul>';
+    return retour;
+}
+
+
 function creationQCM(json, actId){
     var retour = '<br><fieldset><legend>Activité ' + actId + ' </legend><form method="post" name="formQuest" id="formQuest" action="correction.html">';
     nombre = json.length;
     for(var i=0; i<json.length; i++){
         retour += '<h2>' + json[i]["question"] + ' ?</h2>';
+        if(json[i]["IMG"] != null){
+            retour += '<img src=../IMG/BDD/' + json[i]["IMG"] + ' alt=' + json[i]["IMG"] + ' height="42" width="42"><br>';
+        }
         reponses = melangerReponses(json[i]);
         for(var j=0; j<reponses.length; j++){
-            retour += '<input type ="radio" name="reponses' + i +  '" value=' + reponses[j] + '>' + reponses[j] + '<br>';
+            retour += '<input type ="radio" id=' + i+reponses[j] + ' name="reponses' + i +  '" value=' + reponses[j] + '><label for=' + i+reponses[j] + '>' + reponses[j] + '</label>' + '<br>';
         }
     }
     retour += '<br><input type="submit" value="Envoyé">'
-    //retour += '<h3>Ton résultat : 0/2 </h3>';
+    retour += '<input type="button" onclick="window.location.reload(false)" value="Retour"/>';
     return retour;
 }
+
+function creeTableau(json){
+    var retour = '<table><tr><th>Nom</th><th>Prenom</th><th>Activité</th><th>Cote</th><th>Total</th></tr>';
+    for(var i=0; i<json.length; i++){
+        retour += '<tr><td>' + json[i].PersNom + '</td><td>' + json[i].PersPrenom + '</td><td>' + json[i].ActNom + '</td><td>' + json[i].Cote + '</td><td>' + json[i].ActNombreQuestion + '</td></tr>';
+    }
+    retour += '</table>';
+    retour += '<br>';
+    retour += '<input type="button" onclick="window.location.reload(false)" value="Retour"/>';
+    return retour;
+}
+
+//Code repris sur internet
 
 function melangerReponses(json){
     bonneReponses.push(json['bonneReponse']);
@@ -168,6 +213,8 @@ function shuffle(a)
     }
     return a;
 }
+
+//Jusqu'ici
 
 function testeJson(json) {
     var parsed;

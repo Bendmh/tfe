@@ -1,5 +1,6 @@
 <?php
 
+if ( count( get_included_files() ) == 1) die( '--access denied--' );
 
 class Db {
 
@@ -52,7 +53,7 @@ class Db {
         switch ($nom){
             case 'ajouterPersonne' :
 
-                $appel = 'insert into Personnes(PersNom, PersPrenom, PersMdp, PersStatut) value(?,?,?,?)';
+                $appel = 'insert into Personnes(PersNom, PersPrenom, PersMdp, PersStatut, classe) value(?,?,?,?,?)';
 
                 //$appel = 'select * from Questions';
                 $sth = $this->iPdo->prepare($appel);
@@ -61,11 +62,14 @@ class Db {
                 $sth->bindParam(2, $prenom);
                 $sth->bindParam(3, $Mdp);
                 $sth->bindParam(4, $statut);
+                $sth->bindParam(5, $classe);
 
-                $nom = $_POST['nom'];
-                $prenom = $_POST['prenom'];
-                $Mdp = $_POST['password'];
-                $statut = $_POST['statut'];
+
+                $nom = htmlspecialchars($_POST['nom']);
+                $prenom = htmlspecialchars($_POST['prenom']);
+                $Mdp = htmlspecialchars($_POST['password']);
+                $statut = htmlspecialchars($_POST['statut']);
+                $classe = htmlspecialchars($_POST['classes']);
 
                 $sth->execute();
 
@@ -81,7 +85,7 @@ class Db {
 
             case 'PersAct' :
 
-                $appel = 'INSERT INTO PersAct (PersId, ActId, cote) VALUES ((select PersId from test.Personnes where PersPrenom = "'. $_SESSION['user'][0]['PersPrenom'] .'" and PersNom = "'. $_SESSION['user'][0]['PersNom'] .'"), ?, NULL) ON DUPLICATE KEY UPDATE cote = NULL';
+                $appel = 'INSERT INTO PersAct (PersId, ActId, cote) VALUES ((select PersId from test.Personnes where PersPrenom = "'. $_SESSION['user'][0]['PersPrenom'] .'" and PersNom = "'. $_SESSION['user'][0]['PersNom'] .'"), ?, NULL) ON DUPLICATE KEY UPDATE cote = cote';
                 $sth = $this->iPdo->prepare($appel);
                 $sth->bindParam(1, $idAct);
 
@@ -94,6 +98,14 @@ class Db {
                 $appel = 'UPDATE PersAct SET cote = '. $num .' WHERE ActId= '. $_SESSION['activiteId'] .' and PersId = (select PersId from test.Personnes where PersPrenom = "'. $_SESSION['user'][0]['PersPrenom'] .'" and PersNom = "'. $_SESSION['user'][0]['PersNom'] .'")';
                 $sth = $this->iPdo->prepare($appel);
                 $sth->execute();
+                break;
+
+            case 'classes' :
+                $appel = 'SELECT PersNom, PersPrenom, ActNom, ActNombreQuestion, Cote FROM `Personnes` natural join PersAct NATURAL join Activites where classe = "' . $num .'"';
+                $sth = $this->iPdo->prepare($appel);
+                $sth->execute();
+                return $sth->fetchAll(PDO::FETCH_ASSOC);
+                break;
         }
     }
 }
