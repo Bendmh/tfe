@@ -53,7 +53,7 @@ class Db {
         switch ($nom){
             case 'ajouterPersonne' :
 
-                $appel = 'insert into Personnes(PersNom, PersPrenom, PersMdp, PersStatut, classe) value(?,?,?,?,?)';
+                $appel = 'insert into Personnes(PersNom, PersPrenom, PersMdp, PersStatut, classe, IMG) value(?,?,?,?,?,?)';
 
                 //$appel = 'select * from Questions';
                 $sth = $this->iPdo->prepare($appel);
@@ -63,6 +63,7 @@ class Db {
                 $sth->bindParam(3, $Mdp);
                 $sth->bindParam(4, $statut);
                 $sth->bindParam(5, $classe);
+                $sth->bindParam(6, $image);
 
 
                 $nom = htmlspecialchars($_POST['nom']);
@@ -70,6 +71,9 @@ class Db {
                 $Mdp = htmlspecialchars($_POST['password']);
                 $statut = htmlspecialchars($_POST['statut']);
                 $classe = htmlspecialchars($_POST['classes']);
+
+                $image = $statut == "Professeur" ? "prof.jpg" : "eleve.png";
+
 
                 $sth->execute();
 

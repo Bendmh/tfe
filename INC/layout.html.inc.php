@@ -6,8 +6,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cours de Math</title>
     <link rel="stylesheet" type="text/css" href="CSS/index.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.5/css/select2.min.css">
     <script src="/jq/jquery-3.3.1.min.js"></script>
     <script type="text/javascript" src="JS/index.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.5/js/select2.min.js"></script>
 
     <style>
         #ephec {

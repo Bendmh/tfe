@@ -19,7 +19,7 @@ if(isset($_SESSION['user'])){
     $taille = '100%';
     $boutons = 'none';
     if($_SESSION['user'][0]['PersStatut'] == "Eleves"){
-        $bienvenue = '<h1> Bienvenue ' . $_SESSION['user'][0]['PersPrenom'] . '</h1>';
+        $bienvenue = '<h1> Bienvenue ' . $_SESSION['user'][0]['PersPrenom'] . '</h1><img src=../IMG/BDD/' . $_SESSION['user'][0]['IMG'] . ' alt=' . $_SESSION['user'][0]['IMG'] . ' height="80" width="80">';
         $message =
             '<ul>
                 <li><a href="activite1.html">Activité 1</a></li>
@@ -27,7 +27,7 @@ if(isset($_SESSION['user'])){
                 <li><a href="deconnexion.html">Déconnexion</a></li>
              </ul>';
     }else {
-        $bienvenue = '<h1> Bienvenue ' . $_SESSION['user'][0]['PersPrenom'] . '</h1>';
+        $bienvenue = '<h1> Bienvenue ' . $_SESSION['user'][0]['PersPrenom'] . '</h1><img src=../IMG/BDD/' . $_SESSION['user'][0]['IMG'] . ' alt=' . $_SESSION['user'][0]['IMG'] . ' height="80" width="80">';
         $tab = explode(",", $_SESSION['user'][0]['classe']);
         $message = '<ul><li>Classe : </li><ul>';
         foreach ($tab as $value){

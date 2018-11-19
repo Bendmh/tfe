@@ -8,12 +8,14 @@ $(document).ready(function(){
         event.preventDefault();
         appelAjax(this);
     });
-
+    
     $('#inscription').click(function(){
+        $('#message').hide();
         $.ajax('INC/template.login.inc.php').done(inscription);
     });
 
     $('#connexion').click(function(){
+        $('#message').hide();
         $.ajax('INC/template.login.inc.php').done(connexion);
     });
 });
@@ -29,6 +31,7 @@ function inscription(json){
             appelAjax(this);
         }
     });
+    $('#classes').select2();
 }
 
 function menu(json){
@@ -107,7 +110,8 @@ function gereRetour(retour){
                 });
                 break;
             case 'inscription' :
-                $('#message').html('<h1> Bienvenue ' + retour[action]["PersPrenom"] + '</h1>');
+                $('#message').html('<h1> Bienvenue ' + retour[action]["PersPrenom"] + '</h1>' +
+                    '<img src=../IMG/BDD/' + retour[action]["IMG"] + ' alt=' + retour[action]["IMG"] + ' height="80" width="80">');
                 if(retour[action]["PersStatut"] == 'Eleves'){
                     $.ajax('INC/template.menu.inc.php').done(menu);
                 }else{
@@ -159,9 +163,10 @@ function creationQCM(json, actId){
     nombre = json.length;
     for(var i=0; i<json.length; i++){
         retour += '<h2>' + json[i]["question"] + ' ?</h2>';
-        if(json[i]["IMG"] != null){
+        //par exemple pour mettre une image à la question
+        /*if(json[i]["IMG"] != null){
             retour += '<img src=../IMG/BDD/' + json[i]["IMG"] + ' alt=' + json[i]["IMG"] + ' height="42" width="42"><br>';
-        }
+        }*/
         reponses = melangerReponses(json[i]);
         for(var j=0; j<reponses.length; j++){
             retour += '<input type ="radio" id=' + i+reponses[j] + ' name="reponses' + i +  '" value=' + reponses[j] + '><label for=' + i+reponses[j] + '>' + reponses[j] + '</label>' + '<br>';
