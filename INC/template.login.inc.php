@@ -14,7 +14,7 @@
             <option value="Eleves">Eleves</option>
             <option value="Professeur">Professeur</option>
         </select>
-        <select id="classes" name="classes" multiple>
+        <select id="classes" name="classes[]" multiple>
             <option value="1A">1A</option>
             <option value="1B">1B</option>
             <option value="1C">1C</option>

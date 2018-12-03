@@ -27,8 +27,9 @@ function gereRequete($rq=""){
             }
             $iDB = new Db();
             $retour = $iDB->verification('connexion');
+            //return hash('sha256',$_POST["password"], false );
             //return JSON_encode($retour);
-            if($retour[0]["PersMdp"] != $_POST["password"]){
+            if($retour[0]["MDPHash"] != hash('sha256',$_POST["password"], false )){
                 return '{"erreur" : "Mot de passe incorrect" }';
             }else {
                 $_SESSION['user'] = $retour;

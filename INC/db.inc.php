@@ -28,11 +28,11 @@ class Db {
                 $appel = 'select * from Personnes where PersNom = ? and PersPrenom = ?';
                 $sth = $this->iPdo->prepare($appel);
 
-                $sth->bindParam(1, $nom);
-                $sth->bindParam(2, $prenom);
-
                 $nom = $_POST['nom'];
                 $prenom = $_POST['prenom'];
+
+                $sth->bindParam(1, $nom);
+                $sth->bindParam(2, $prenom);
 
                 $sth->execute();
                 $row =  $sth->fetchAll(PDO::FETCH_ASSOC);
@@ -53,10 +53,18 @@ class Db {
         switch ($nom){
             case 'ajouterPersonne' :
 
-                $appel = 'insert into Personnes(PersNom, PersPrenom, PersMdp, PersStatut, classe, IMG) value(?,?,?,?,?,?)';
+                $appel = 'insert into Personnes(PersNom, PersPrenom, PersMdp, PersStatut, classe, IMG, MDPHash) value(?,?,?,?,?,?,?)';
 
                 //$appel = 'select * from Questions';
                 $sth = $this->iPdo->prepare($appel);
+
+                $nom = htmlspecialchars($_POST['nom']);
+                $prenom = htmlspecialchars($_POST['prenom']);
+                $Mdp = htmlspecialchars($_POST['password']);
+                $statut = htmlspecialchars($_POST['statut']);
+                $classe = htmlspecialchars(implode(",",$_POST['classes']));
+
+                $image = $statut == "Professeur" ? "prof.jpg" : "eleve.png";
 
                 $sth->bindParam(1, $nom);
                 $sth->bindParam(2, $prenom);
@@ -64,15 +72,10 @@ class Db {
                 $sth->bindParam(4, $statut);
                 $sth->bindParam(5, $classe);
                 $sth->bindParam(6, $image);
+                $sth->bindParam(7, hash('sha256', $Mdp, false));
 
 
-                $nom = htmlspecialchars($_POST['nom']);
-                $prenom = htmlspecialchars($_POST['prenom']);
-                $Mdp = htmlspecialchars($_POST['password']);
-                $statut = htmlspecialchars($_POST['statut']);
-                $classe = htmlspecialchars($_POST['classes']);
 
-                $image = $statut == "Professeur" ? "prof.jpg" : "eleve.png";
 
 
                 $sth->execute();

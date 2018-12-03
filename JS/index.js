@@ -125,6 +125,7 @@ function gereRetour(retour){
                     $('#ephec').css('width', '100%');
                 }
                 $('#login').hide();
+                $('#message').show();
                 $('#menu').show();
                 break;
             case 'erreur' :
