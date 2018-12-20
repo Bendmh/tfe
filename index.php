@@ -20,17 +20,18 @@ if(isset($_SESSION['user'])){
     $boutons = 'none';
     if($_SESSION['user'][0]['PersStatut'] == "Eleves"){
         $bienvenue = '<h1> Bienvenue ' . $_SESSION['user'][0]['PersPrenom'] . '</h1><img src=../IMG/BDD/' . $_SESSION['user'][0]['IMG'] . ' alt=' . $_SESSION['user'][0]['IMG'] . ' height="80" width="80">';
-        $message =
-            '<ul>
-                <li><a href="activite1.html">Activité 1</a></li>
-                <li><a href="activite2.html">Activité 2</a></li>
-                <li><a href="deconnexion.html">Déconnexion</a></li>
-             </ul>';
+        $message = '<h2>Choisis la matière</h2><select>';
+        for($i = 0; $i < sizeof($_SESSION['matiere']); $i++){
+            $message .= '<option value="' . $_SESSION['matiere'][$i]["matiereNom"] . '">' . $_SESSION['matiere'][$i]["matiereNom"] . '</option>';
+        }
+        $message .= '</select>';
+        $message .= '<br><a href="deconnexion.html">Déconnexion</a>';
     }else {
         $bienvenue = '<h1> Bienvenue ' . $_SESSION['user'][0]['PersPrenom'] . '</h1><img src=../IMG/BDD/' . $_SESSION['user'][0]['IMG'] . ' alt=' . $_SESSION['user'][0]['IMG'] . ' height="80" width="80">';
         $tab = explode(",", $_SESSION['user'][0]['classe']);
         $message = '<ul><li>Classe : </li><ul>';
         foreach ($tab as $value){
+            return $value;
             $message .= '<li><a href="'. $value .'.html">' . $value . '</a></li>';
         }
         $message .= '</ul><li><a href="deconnexion.html">Déconnexion</a></li></ul>';

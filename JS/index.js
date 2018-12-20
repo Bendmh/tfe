@@ -8,6 +8,10 @@ $(document).ready(function(){
         event.preventDefault();
         appelAjax(this);
     });
+
+    $('select').change(function(){
+       alert('vous avez changé la matière');
+    });
     
     $('#inscription').click(function(){
         $('#message').hide();
@@ -110,20 +114,25 @@ function gereRetour(retour){
                 });
                 break;
             case 'inscription' :
-                $('#message').html('<h1> Bienvenue ' + retour[action]["PersPrenom"] + '</h1>' +
-                    '<img src=../IMG/BDD/' + retour[action]["IMG"] + ' alt=' + retour[action]["IMG"] + ' height="80" width="80">');
-                if(retour[action]["PersStatut"] == 'Eleves'){
-                    $.ajax('INC/template.menu.inc.php').done(menu);
+                $('#message').html('<h1> Bienvenue ' + retour[action]["user"]["PersPrenom"] + '</h1>' +
+                    '<img src=../IMG/BDD/' + retour[action]["user"]["IMG"] + ' alt=' + retour[action]["user"]["IMG"] + ' height="80" width="80">');
+                if(retour[action]["user"]["PersStatut"] == 'Eleves'){
+                    menuEleve = creeMenu(retour[action]["matiere"], "eleve");
+                    $('#menu').html(menuEleve);
+                    //$.ajax('INC/template.menu.inc.php').done(menu);
                 }else{
-                    menuProf = creeMenu(retour["inscription"]["classe"]);
+                    menuProf = creeMenu(retour[action]["user"]["classe"], "prof");
                     $('#menu').html(menuProf);
-                    $('a').click(function(event){
-                        event.preventDefault();
-                        appelAjax(this);
+                    $('select').change(function(){
+                        alert('vous avez changé la matière');
                     });
-                    $('#champ').hide();
-                    $('#ephec').css('width', '100%');
                 }
+                $('#champ').hide();
+                $('#ephec').css('width', '100%');
+                $('a').click(function(event){
+                    event.preventDefault();
+                    appelAjax(this);
+                });
                 $('#login').hide();
                 $('#message').show();
                 $('#menu').show();
@@ -148,14 +157,25 @@ function gereRetour(retour){
 }
 
 
-function creeMenu(json){
-    var tab = json.split(",");
-    var retour = '<ul><li>Classes : </li><ul>';
-    for (var i=0; i < tab.length; i++){
-        retour += '<li><a href="' + tab[i] + '.html">' + tab[i] + '</a></li>';
+function creeMenu(json, role){
+    if(role == "eleve"){
+        var retour = '<h2>Choisis la matière</h2>';
+        retour += '<select>';
+        for(var i = 0; i < json.length; i++){
+            retour += '<option value="' + json[i].matiereNom + '">' + json[i].matiereNom + '</option>'
+        }
+        retour += '</select>';
+        retour += '<br><a href="deconnexion.html">Déconnexion</a>'
+        return retour;
+    }else {
+        var tab = json.split(",");
+        var retour = '<ul><li>Classes : </li><ul>';
+        for (var i = 0; i < tab.length; i++) {
+            retour += '<li><a href="' + tab[i] + '.html">' + tab[i] + '</a></li>';
+        }
+        retour += '</ul><li><a href="deconnexion.html">Déconnexion</a></li></ul>';
+        return retour;
     }
-    retour += '</ul><li><a href="deconnexion.html">Déconnexion</a></li></ul>';
-    return retour;
 }
 
 

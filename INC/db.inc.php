@@ -74,13 +74,10 @@ class Db {
                 $sth->bindParam(6, $image);
                 $sth->bindParam(7, hash('sha256', $Mdp, false));
 
-
-
-
-
                 $sth->execute();
 
                 break;
+
 
             case 'questions' :
                 $appel = 'SELECT * FROM test.ActQuest natural join Questions where ActId = '. $_SESSION['activiteId'];
@@ -94,9 +91,10 @@ class Db {
 
                 $appel = 'INSERT INTO PersAct (PersId, ActId, cote) VALUES ((select PersId from test.Personnes where PersPrenom = "'. $_SESSION['user'][0]['PersPrenom'] .'" and PersNom = "'. $_SESSION['user'][0]['PersNom'] .'"), ?, NULL) ON DUPLICATE KEY UPDATE cote = cote';
                 $sth = $this->iPdo->prepare($appel);
-                $sth->bindParam(1, $idAct);
 
                 $idAct = $_SESSION['activiteId'];
+
+                $sth->bindParam(1, $idAct);
 
                 $sth->execute();
                 break;
@@ -109,6 +107,12 @@ class Db {
 
             case 'classes' :
                 $appel = 'SELECT PersNom, PersPrenom, ActNom, ActNombreQuestion, Cote FROM `Personnes` natural join PersAct NATURAL join Activites where classe = "' . $num .'"';
+                $sth = $this->iPdo->prepare($appel);
+                $sth->execute();
+                return $sth->fetchAll(PDO::FETCH_ASSOC);
+                break;
+            case 'matiere' :
+                $appel = 'SELECT * FROM `Matiere` ';
                 $sth = $this->iPdo->prepare($appel);
                 $sth->execute();
                 return $sth->fetchAll(PDO::FETCH_ASSOC);

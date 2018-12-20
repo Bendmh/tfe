@@ -17,6 +17,7 @@ function gereRequete($rq=""){
             }else {
                 $iDB->call('ajouterPersonne');
                 $_SESSION['user'] = $iDB->verification('connexion');
+                $_SESSION['activite'] = $iDB->call('activite');
                 //return JSON_encode($_SESSION);
                 return '{"inscription" : ' . JSON_encode($_SESSION['user'][0]) . '}';
             }
@@ -27,14 +28,15 @@ function gereRequete($rq=""){
             }
             $iDB = new Db();
             $retour = $iDB->verification('connexion');
-            //return hash('sha256',$_POST["password"], false );
-            //return JSON_encode($retour);
             if($retour[0]["MDPHash"] != hash('sha256',$_POST["password"], false )){
                 return '{"erreur" : "Mot de passe incorrect" }';
             }else {
                 $_SESSION['user'] = $retour;
+                $_SESSION['matiere'] = $iDB->call('matiere');
+                $renvoie['user'] = $_SESSION['user'][0];
+                $renvoie['matiere'] = $_SESSION['matiere'];
                 //return JSON_encode($_SESSION);
-                return '{"inscription" : ' . JSON_encode($_SESSION['user'][0]) . '}';
+                return '{"inscription" : ' . JSON_encode($renvoie) . '}';
             }
             break;
         case 'activite1' :
